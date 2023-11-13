@@ -137,7 +137,7 @@ export default function initPlayer() {
         ballGenerator();
         numRed += 1;
         red.innerText = `Red collected: ${numRed} Pokéballs.`;
-        if (numRed === 2) {
+        if (numRed === 20) {
           wellcome.innerText = `RED WIN!`;
           setTimeout(function () {
             window.location.reload();
@@ -150,7 +150,7 @@ export default function initPlayer() {
         ballGenerator();
         numBlue += 1;
         blue.innerText = `Blue collected: ${numBlue} Pokéballs.`;
-        if (numBlue === 15) {
+        if (numBlue === 20) {
           wellcome.innerText = `BLUE WIN!`;
           setTimeout(function () {
             window.location.reload();
