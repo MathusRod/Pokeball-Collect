@@ -21,21 +21,21 @@ export default function initPlayer() {
     });
     game.appendChild(div);
   }
-  const header = document.querySelector("header");
-  const wellcome = document.querySelector(".wellcome");
+  const welcome = document.querySelector(".welcome");
   const btn = document.querySelector(".start");
   btn.addEventListener("click", handleClick);
   function handleClick(event) {
     let cont = 4;
     event.preventDefault();
-    header.removeChild(btn);
+    btn.style.display = "none";
+    btn.removeEventListener("click", handleClick);
     const timer = setInterval(() => {
       cont--;
-      wellcome.innerText = `The game will start in ${cont} seconds`;
+      welcome.innerText = `The game will start in ${cont} seconds`;
     }, 1000);
     setTimeout(function createBall() {
       clearInterval(timer);
-      wellcome.innerText = `THE GAME STARTED`;
+      welcome.innerText = `THE GAME STARTED`;
       for (let i = 0; i < numBall; i++) {
         ballGenerator();
       }
@@ -110,55 +110,6 @@ export default function initPlayer() {
     });
     game.appendChild(div);
   }
-  function collision($div1, $div2) {
-    var x1 = $div1.getBoundingClientRect().left;
-    var y1 = $div1.getBoundingClientRect().top;
-    var h1 = $div1.clientHeight;
-    var w1 = $div1.clientWidth;
-    var b1 = y1 + h1;
-    var r1 = x1 + w1;
-
-    var x2 = $div2.getBoundingClientRect().left;
-    var y2 = $div2.getBoundingClientRect().top;
-    var h2 = $div2.clientHeight;
-    var w2 = $div2.clientWidth;
-    var b2 = y2 + h2;
-    var r2 = x2 + w2;
-
-    if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
-    return true;
-  }
-
-  function checkCollisions() {
-    balls.forEach((ball) => {
-      if (collision(ball.ball, playerOne)) {
-        sound.play();
-        ball.ball.remove();
-        ballGenerator();
-        numRed += 1;
-        red.innerText = `Red collected: ${numRed} Pokéballs.`;
-        if (numRed === 20) {
-          wellcome.innerText = `RED WIN!`;
-          setTimeout(function () {
-            window.location.reload();
-          }, 2000);
-        }
-      }
-      if (collision(ball.ball, playerTwo)) {
-        sound.play();
-        ball.ball.remove();
-        ballGenerator();
-        numBlue += 1;
-        blue.innerText = `Blue collected: ${numBlue} Pokéballs.`;
-        if (numBlue === 20) {
-          wellcome.innerText = `BLUE WIN!`;
-          setTimeout(function () {
-            window.location.reload();
-          }, 2000);
-        }
-      }
-    });
-  }
 
   window.addEventListener("keydown", (press) => {
     switch (press.key) {
@@ -226,4 +177,69 @@ export default function initPlayer() {
       playerOne.classList.remove("active");
     }
   });
+
+  function checkCollisions() {
+    balls.forEach((ball) => {
+      if (collision(ball.ball, playerOne)) {
+        sound.play();
+        ball.ball.remove();
+        ballGenerator();
+        numRed += 1;
+        red.innerText = `Red collected: ${numRed} Pokéballs.`;
+        if (numRed === 20) {
+          welcome.innerText = `RED WIN!`;
+          createResetButton();
+        }
+      }
+      if (collision(ball.ball, playerTwo)) {
+        sound.play();
+        ball.ball.remove();
+        ballGenerator();
+        numBlue += 1;
+        blue.innerText = `Blue collected: ${numBlue} Pokéballs.`;
+
+        if (numBlue === 20) {
+          welcome.innerText = `BLUE WIN!`;
+          createResetButton();
+        }
+      }
+    });
+  }
+
+  function collision($div1, $div2) {
+    var x1 = $div1.getBoundingClientRect().left;
+    var y1 = $div1.getBoundingClientRect().top;
+    var h1 = $div1.clientHeight;
+    var w1 = $div1.clientWidth;
+    var b1 = y1 + h1;
+    var r1 = x1 + w1;
+
+    var x2 = $div2.getBoundingClientRect().left;
+    var y2 = $div2.getBoundingClientRect().top;
+    var h2 = $div2.clientHeight;
+    var w2 = $div2.clientWidth;
+    var b2 = y2 + h2;
+    var r2 = x2 + w2;
+
+    if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
+    return true;
+  }
+
+  function createResetButton() {
+    btn.style.display = "block";
+    btn.innerText = "reset";
+    btn.addEventListener("click", endGame);
+  }
+  function endGame() {
+    let cont = 4;
+    btn.style.display = "none";
+    const timer = setInterval(() => {
+      cont--;
+      welcome.innerText = `the game will reset in ${cont} seconds`;
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(timer);
+      window.location.reload();
+    }, 5000);
+  }
 }
